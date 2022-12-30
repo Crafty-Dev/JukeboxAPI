@@ -20,8 +20,8 @@ public class JukeboxAPI {
 
     }
 
-    public static void disconnect(){
-        if(!WebClient.isConnected())
+    public static void disconnect() {
+        if (!WebClient.isConnected())
             throw new IllegalStateException("API is not connected to a Jukebox");
 
         WebClient.getInstance().close();
@@ -29,18 +29,25 @@ public class JukeboxAPI {
     }
 
 
-    public static void executeCommand(String apiKey, String command) {
+    public static void executeCommand(String apiKey, String command, String source) {
         if (!WebClient.isConnected())
             throw new IllegalStateException("API is not connected to a Jukebox");
 
         JSONObject json = new JSONObject();
         json.put("request", "command");
-        json.put("source", "IntelliJ");
         json.put("key", apiKey);
         json.put("content", command);
 
+        if(source != null)
+            json.put("source", source);
+
         WebClient.getInstance().send(json.toString());
     }
+
+    public static void executeCommand(String apiKey, String command) {
+        executeCommand(apiKey, command, null);
+    }
+
 
     public static void registerListener(EventListener listener) {
         LISTENERS.add(listener);
